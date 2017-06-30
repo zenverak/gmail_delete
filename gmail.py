@@ -2,10 +2,7 @@ import os
 import sys
 import imp
 
-try:
-    from httplib2 import Http
-except:
-    from httplib import Http
+from httplib2 import Http
 
 
 from apiclient import discovery, errors
@@ -42,7 +39,7 @@ def get_credentials():
     credential_path = os.path.join(credential_dir,
                                    'gmail-python-quickstart.json')
 
-    store = oauth2client.file.Storage(credential_path)
+    store = Storage(credential_path)
     credentials = store.get()
     if not credentials or credentials.invalid:
         flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
@@ -142,13 +139,17 @@ def batch_delete(service, emails):
 
 
 def main(query):
-        service = build_service()
-        emails = get_emails(query, service)
-        emails = prep_messages_for_delete(emails)
+        if query == '':
+            print "Please provide a query"
+        else:
+            
+            service = build_service()
+            emails = get_emails(query, service)
+            emails = prep_messages_for_delete(emails)
 
-    ##    print len(emails)
-        for email_set in emails:
-            batch_delete(service, email_set)
+        ##    print len(emails)
+            for email_set in emails:
+                batch_delete(service, email_set)
         
     
 
